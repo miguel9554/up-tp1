@@ -1,0 +1,11 @@
+{
+    "DESIGN_NAME": "counter",
+    "PDK": "sky130A",
+    "VERILOG_FILES": "dir::src/*.v",
+    "CLOCK_PORT": "clk",
+    "CLOCK_PERIOD": 10,
+    "FP_CORE_UTIL": 40,
+    "PL_TARGET_DENSITY_PCT": 55,
+    "PNR_SDC_FILE": "dir::constraints.sdc",
+    "SIGNOFF_SDC_FILE": "dir::constraints.sdc"
+}

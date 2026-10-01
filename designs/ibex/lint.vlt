@@ -1,0 +1,24 @@
+`verilator_config
+// Lint waivers for ibex_top (synthesis config). Mirrors upstream
+// external/ibex/lint/verilator_waiver.vlt, adapted to the vendored layout.
+
+// Unconnected output pins are intentional throughout ibex (upstream waiver).
+lint_off -rule PINCONNECTEMPTY
+
+// Vendored lowRISC primitives are third-party IP (upstream waives them fully).
+lint_off -file "*/external/ibex/vendor/lowrisc_ip/*"
+
+// Only read by RVFI (simulation/formal) logic, which is not synthesized.
+lint_off -rule UNUSEDSIGNAL -file "*/rtl/ibex_core.sv" -match "*instr_first_cycle_id*"
+
+// Simulation-performance hint only: vectors whose bits are combinationally
+// inter-dependent. No real loop; the Yosys loop check passes.
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_id_stage.sv"   -match "*instr_executing_spec*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_controller.sv" -match "*special_req*"
+lint_off -rule UNOPTFLAT -file "*/rtl/ibex_core.sv"       -match "*id_in_ready*"
+
+// sky130 ICG / SRAM wrappers: PDK cell and macro power pins are connected
+// by PnR, and the FPGA-only parameters are kept for interface compatibility.
+lint_off -rule PINMISSING   -file "*/designs/ibex/src/prim_clock_gating.sv"
+lint_off -rule PINMISSING   -file "*/designs/ibex/src/prim_ram_1p.sv" -match "*'v*d1'*"
+lint_off -rule UNUSEDPARAM  -file "*/designs/ibex/src/prim_clock_gating.sv"
